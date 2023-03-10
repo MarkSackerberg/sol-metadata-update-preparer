@@ -44,7 +44,7 @@ export interface Creator {
   share: number;
 }
 
-// download NFTs
+// 1. download off chain metadata
 const errorlist: string[] = [];
 export async function fetchSingleNft(
   mintAddress: PublicKey,
@@ -60,7 +60,6 @@ export async function fetchSingleNft(
   try {
     let count = 0;
     const mints_data = [];
-    const errorlist: string[] = [];
     const nft = await metaplex.nfts().findByMint({ mintAddress });
     mints_data.push(nft);
     count = count + 1;
