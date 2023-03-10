@@ -133,7 +133,7 @@ export async function copyUri(
     if (oldMetadataJson.name) {
       number = parseInt(oldMetadataJson.name.replace(/[^0-9]/g, ''));
     } else {
-      throw new Error('Metadata error: Image not defined!');
+      throw new Error('Metadata error: Name does not contain number');
     }
     const updatedMetadataJson: JsonMetadata = JSON.parse(
       fs.readFileSync(`${updatedMetadataFolder}/${number}.json`, 'utf-8'),
@@ -178,7 +178,7 @@ export async function manifestToDecoded(
       number = parseInt(decodedMetadataJSON.data.name.replace(/[^0-9]/g, ''));
     } else {
       errorlist.push(file);
-      throw new Error('Metadata error: Image not defined!');
+      throw new Error('Metadata error: Name does not contain number!');
     }
 
     const arweaveTx = arweaveManifest.paths[`${number}.json`].id;
