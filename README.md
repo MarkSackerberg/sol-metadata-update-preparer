@@ -42,4 +42,7 @@ Process flow that I am often following is:
 ## Contact
 If you have any issues or ideas feel free to contact me on Discord (Mark Sackerberg#7975), [Twitter](https://twitter.com/MarkSackerberg) or open a issue here on Github.
 
-#### This project was created using [themetalfleece/nodejs-typescript-template](https://github.com/themetalfleece/nodejs-typescript-template)
+**Open for opportunities: If you want to work with me on a project - small, big, or just have me do some metadata updates for you - let me know!**
+
+
+This project was created using [themetalfleece/nodejs-typescript-template](https://github.com/themetalfleece/nodejs-typescript-template)
