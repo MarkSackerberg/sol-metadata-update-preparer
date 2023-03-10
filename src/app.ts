@@ -44,6 +44,82 @@ export interface Creator {
   share: number;
 }
 
+// download NFTs
+const errorlist: string[] = [];
+export async function fetchSingleNft(
+  mintAddress: PublicKey,
+  downloadDir: string,
+  rpcUrl: string,
+  metaplex: Metaplex | undefined,
+) {
+  if (!metaplex) {
+    const connection = new Connection(rpcUrl, 'confirmed');
+    metaplex = new Metaplex(connection);
+  }
+
+  try {
+    let count = 0;
+    const mints_data = [];
+    const errorlist: string[] = [];
+    const nft = await metaplex.nfts().findByMint({ mintAddress });
+    mints_data.push(nft);
+    count = count + 1;
+    console.log(count);
+    if (!nft || !nft.name) {
+      throw new Error('Something bad happened');
+    }
+    const numb = nft.name.match(/\d/g);
+    if (!numb) {
+      throw new Error('Something bad happened');
+    }
+    const json = JSON.stringify(nft.json);
+    fs.writeFile(
+      `${downloadDir}/${mintAddress.toBase58()}.json`,
+      json,
+      'utf8',
+      function () {
+        console.log('done');
+      },
+    );
+  } catch (e) {
+    errorlist.push(mintAddress.toBase58());
+    console.error(
+      `error downloading or saving ${mintAddress.toBase58()}: ${e} `,
+    );
+  }
+}
+
+export async function fetchAllNft(
+  mintListFile: string,
+  downloadDir: string,
+  rpcUrl: string,
+) {
+  const connection = new Connection(rpcUrl, 'confirmed');
+  const metaplex = new Metaplex(connection);
+  const raw = fs.readFileSync(mintListFile);
+  const mint_list = JSON.parse(raw.toString());
+  const mint_list_keys = mint_list.map(function (x: string) {
+    return new PublicKey(x);
+  });
+
+  //check if folder exists and create it
+  if (!fs.existsSync(downloadDir)) {
+    fs.mkdirSync(downloadDir);
+  }
+  let count = 0;
+  for (const mintAddress of mint_list_keys) {
+    await fetchSingleNft(
+      mintAddress,
+      downloadDir,
+      'https://solana-mainnet.rpc.extrnode.com',
+      metaplex,
+    );
+    count = count++;
+    console.log(`${count}/${mint_list_keys.length}`);
+  }
+  console.log(errorlist);
+}
+
 // 2 copy uri from downloaded json files into UpdatedMetadata files
 export async function copyUri(
   oldMetadataFolder: string,
@@ -129,80 +205,4 @@ export async function manifestToDecoded(
 
     delete arweaveManifest.paths[`${number}.json`];
   });
-}
-
-const errorlist: string[] = [];
-
-export async function fetchSingleNft(
-  mintAddress: PublicKey,
-  downloadDir: string,
-  rpcUrl: string,
-  metaplex: Metaplex | undefined,
-) {
-  if (!metaplex) {
-    const connection = new Connection(rpcUrl, 'confirmed');
-    metaplex = new Metaplex(connection);
-  }
-
-  try {
-    let count = 0;
-    const mints_data = [];
-    const errorlist: string[] = [];
-    const nft = await metaplex.nfts().findByMint({ mintAddress });
-    mints_data.push(nft);
-    count = count + 1;
-    console.log(count);
-    if (!nft || !nft.name) {
-      throw new Error('Something bad happened');
-    }
-    const numb = nft.name.match(/\d/g);
-    if (!numb) {
-      throw new Error('Something bad happened');
-    }
-    const json = JSON.stringify(nft.json);
-    fs.writeFile(
-      `${downloadDir}/${mintAddress.toBase58()}.json`,
-      json,
-      'utf8',
-      function () {
-        console.log('done');
-      },
-    );
-  } catch (e) {
-    errorlist.push(mintAddress.toBase58());
-    console.error(
-      `error downloading or saving ${mintAddress.toBase58()}: ${e} `,
-    );
-  }
-}
-
-export async function fetchAllNft(
-  mintListFile: string,
-  downloadDir: string,
-  rpcUrl: string,
-) {
-  const connection = new Connection(rpcUrl, 'confirmed');
-  const metaplex = new Metaplex(connection);
-  const raw = fs.readFileSync(mintListFile);
-  const mint_list = JSON.parse(raw.toString());
-  const mint_list_keys = mint_list.map(function (x: string) {
-    return new PublicKey(x);
-  });
-
-  //check if folder exists and create it
-  if (!fs.existsSync(downloadDir)) {
-    fs.mkdirSync(downloadDir);
-  }
-  let count = 0;
-  for (const mintAddress of mint_list_keys) {
-    await fetchSingleNft(
-      mintAddress,
-      downloadDir,
-      'https://solana-mainnet.rpc.extrnode.com',
-      metaplex,
-    );
-    count = count++;
-    console.log(`${count}/${mint_list_keys.length}`);
-  }
-  console.log(errorlist);
 }
