@@ -2,7 +2,13 @@
 
 import { Command, Option } from 'commander';
 import { PublicKey } from '@metaplex-foundation/js';
-import { copyUri, manifestToDecoded, fetchSingleNft, fetchAllNft } from './app';
+import {
+  copyUri,
+  manifestToDecoded,
+  fetchSingleNft,
+  fetchAllNft,
+  metabossSnapshotToSugarAirdrop,
+} from './app';
 
 const program = new Command();
 
@@ -43,7 +49,7 @@ program
   });
 
 program
-  .command('copy-uri <oldMetadataFolder> <updatedMetadataFolder>')
+  .command('copy-uri')
   .description(
     'Copy the URI from downloaded JSON files into json files with other metadata.',
   )
@@ -60,7 +66,7 @@ program
   });
 
 program
-  .command('manifest-to-decoded <arweaveManifestFile> <decodedMetadataFolder>')
+  .command('manifest-to-decoded')
   .description(
     'Convert the Arweave manifest file by bundlr to decoded metadata files',
   )
@@ -74,6 +80,17 @@ program
   )
   .action((arweaveManifestFile: string, decodedMetadataFolder: string) => {
     manifestToDecoded(arweaveManifestFile, decodedMetadataFolder);
+  });
+
+program
+  .command('metaboss-snapshot-sugar-airdrop')
+  .description(
+    'Convert the the metaboss holder snapshot to a airdrop list in the format sugar expects',
+  )
+  .argument('<inputFile>', 'path to the holder snapshot file')
+  .argument('[outputFile]', 'path to the new file', 'airdrop_list.json')
+  .action((inputFile: string, outputFile: string) => {
+    metabossSnapshotToSugarAirdrop(inputFile, outputFile);
   });
 
 program.parse(process.argv);

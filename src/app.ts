@@ -205,3 +205,43 @@ export async function manifestToDecoded(
     delete arweaveManifest.paths[`${number}.json`];
   });
 }
+
+export async function metabossSnapshotToSugarAirdrop(
+  inputFile: string,
+  outputFile: string,
+) {
+  type Item = {
+    owner_wallet: string;
+    mint_account: string;
+    metadata_account: string;
+    associated_token_address: string;
+  };
+
+  fs.readFile(inputFile, (err, data) => {
+    if (err) {
+      console.error(`Error reading input file: ${err}`);
+      return;
+    }
+
+    const items: Item[] = JSON.parse(data.toString());
+
+    const result: { [key: string]: number } = {};
+
+    items.forEach((item) => {
+      if (item.owner_wallet in result) {
+        result[item.owner_wallet]++;
+      } else {
+        result[item.owner_wallet] = 1;
+      }
+    });
+
+    fs.writeFile(outputFile, JSON.stringify(result), (err) => {
+      if (err) {
+        console.error(`Error writing output file: ${err}`);
+        return;
+      }
+
+      console.log(`Result saved to ${outputFile}`);
+    });
+  });
+}

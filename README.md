@@ -23,11 +23,12 @@ Options:
   -h, --help                                                                                                       display help for command
 
 Commands:
-  fetch-single-nft [options] <mintAddress> <downloadDir>                                                           Fetch a single NFTs off-chain metadata by mint address
-  fetch-all-nft [options] <mintListFile> <downloadDir>                                                             Fetch all NFTs off-chain metadata based on mintlist
-  copy-uri <oldMetadataFolder> <updatedMetadataFolder> <oldMetadataFolder> <updatedMetadataFolder>                 Copy the URI from downloaded JSON files into UpdatedMetadata files
-  manifest-to-decoded <arweaveManifestFile> <decodedMetadataFolder> <arweaveManifestFile> <decodedMetadataFolder>  Convert the Arweave manifest file by bundlr to decoded metadata files
-  help [command]                                                                                                   display help for command
+  fetch-single-nft [options] <mintAddress> <downloadDir>             Fetch a single NFTs off-chain metadata by mint address
+  fetch-all-nft [options] <mintListFile> <downloadDir>               Fetch all NFTs off-chain metadata based on mintlist
+  copy-uri <oldMetadataFolder> <updatedMetadataFolder>               Copy the URI from downloaded JSON files into json files with other metadata.
+  manifest-to-decoded <arweaveManifestFile> <decodedMetadataFolder>  Convert the Arweave manifest file by bundlr to decoded metadata files
+  metaboss-snapshot-sugar-airdrop <inputFile> [outputFile]           Convert the the metaboss holder snapshot to a airdrop list in the format sugar expects
+  help [command]                                                     display help for command
 ```
 
 ## Example
