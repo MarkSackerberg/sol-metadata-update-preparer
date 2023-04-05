@@ -67,10 +67,6 @@ export async function fetchSingleNft(
     if (!nft || !nft.name) {
       throw new Error('Something bad happened');
     }
-    const numb = nft.name.match(/\d/g);
-    if (!numb) {
-      throw new Error('Something bad happened');
-    }
     const json = JSON.stringify(nft.json);
     fs.writeFile(
       `${downloadDir}/${mintAddress.toBase58()}.json`,
