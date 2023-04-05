@@ -51,7 +51,7 @@ program
 program
   .command('copy-uri')
   .description(
-    'Copy the URI from downloaded JSON files into json files with other metadata.',
+    'Copy the image URI from downloaded JSON files into new json files which have 0.png or similar in the image field.',
   )
   .argument(
     '<oldMetadataFolder>',
