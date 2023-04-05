@@ -241,3 +241,31 @@ export async function metabossSnapshotToSugarAirdrop(
     });
   });
 }
+
+// 3. add faction attribute to metadata
+export async function addFactionAttributeToJsonFiles(folderPath: string) {
+  const files = fs.readdirSync(folderPath);
+  files.forEach((file) => {
+    const json: any = JSON.parse(
+      fs.readFileSync(`${folderPath}/${file}`, 'utf-8'),
+    );
+
+    let factionValue = 'Rare';
+    const name = json.name;
+    const matches = name.match(/#(\d+)$/);
+    if (matches) {
+      const number = matches[1];
+      const nameWithoutNumber = name.substring(0, name.lastIndexOf(' #'));
+      factionValue = nameWithoutNumber.substring(
+        nameWithoutNumber.lastIndexOf(' - ') + 3,
+      );
+    }
+
+    json.attributes.push({
+      trait_type: 'Faction',
+      value: factionValue,
+    });
+
+    fs.writeFileSync(`${folderPath}/${file}`, JSON.stringify(json), 'utf8');
+  });
+}

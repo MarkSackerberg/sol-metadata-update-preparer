@@ -8,6 +8,7 @@ import {
   fetchSingleNft,
   fetchAllNft,
   metabossSnapshotToSugarAirdrop,
+  addFactionAttributeToJsonFiles,
 } from './app';
 
 const program = new Command();
@@ -91,6 +92,19 @@ program
   .argument('[outputFile]', 'path to the new file', 'airdrop_list.json')
   .action((inputFile: string, outputFile: string) => {
     metabossSnapshotToSugarAirdrop(inputFile, outputFile);
+  });
+
+program
+  .command('add-faction')
+  .description(
+    'adds a faction trait based on the Name. Name has to look like "<chars> - Faction #<number>". Each Name that does not fit gets the rare trait',
+  )
+  .argument(
+    '<inputFolder>',
+    'path to the folder containing the off chain metadata json files. It will be updated in place.',
+  )
+  .action((inputFolder: string) => {
+    addFactionAttributeToJsonFiles(inputFolder);
   });
 
 program.parse(process.argv);
